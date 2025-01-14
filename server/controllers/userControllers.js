@@ -5,7 +5,7 @@ const { ErrorResponse } = require("../utils/errorHandler");
 
 /**
  * @desc    Register a new user
- * @route   POST /api/users/register
+ * @route   POST /api/users/
  * @access  Public
  */
 const registerUser = asyncHandler(async (req, res, next) => {
