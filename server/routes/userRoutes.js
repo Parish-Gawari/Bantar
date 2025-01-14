@@ -1,10 +1,20 @@
 const express = require("express");
-
-const { registerUser, authuser } = require("../controllers/userControllers");
+const { registerUser, authUser } = require("../controllers/userControllers"); // Fixed authuser typo
 
 const router = express.Router();
 
-router.route("/").post(registerUser);
-router.post("/login", authuser);
+/**
+ * @desc    Register a new user
+ * @route   POST /api/users
+ * @access  Public
+ */
+router.post("/", registerUser);
+
+/**
+ * @desc    Authenticate user & get token
+ * @route   POST /api/users/login
+ * @access  Public
+ */
+router.post("/login", authUser);
 
 module.exports = router;

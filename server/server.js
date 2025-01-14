@@ -1,18 +1,39 @@
-require("dotenv").config();
 const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const morgan = require("morgan");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
-connectDB();
-const app = express();
-app.use(express.json());
-const PORT = process.env.PORT;
+const { errorHandler } = require("./utils/errorHandler");
 
-app.get("/test", (req, res) => {
-  res.send("Server is up and Running");
+dotenv.config();
+connectDB();
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+app.use("/api/users", userRoutes);
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    statusCode: 200,
+    status: "success",
+    message: "API is running successfully!",
+    data: null,
+  });
 });
 
-app.use("/api/user", userRoutes);
+app.use(errorHandler);
 
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(
+    `🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+  );
 });
