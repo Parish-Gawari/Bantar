@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Signup = () => {
@@ -10,9 +9,9 @@ const Signup = () => {
   const [confirmpassword, setConfirmpassword] = useState("");
   const [pic, setPic] = useState("");
   const [picLoading, setPicLoading] = useState(false);
-  // const navigate = useNavigate();
 
-  const handleImageUpload = (file) => {
+  // Image Upload with Axios
+  const handleImageUpload = async (file) => {
     setPicLoading(true);
     if (!file) {
       alert("Please select an image");
@@ -23,28 +22,31 @@ const Signup = () => {
     if (file.type === "image/jpeg" || file.type === "image/png") {
       const data = new FormData();
       data.append("file", file);
-      data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "piyushproj");
+      data.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      data.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
 
-      fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
-        method: "POST",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setPic(data.url);
-          setPicLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setPicLoading(false);
-        });
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_CLOUDINARY_URL,
+          data
+        );
+        setPic(response.data.url);
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        alert("Image upload failed");
+      } finally {
+        setPicLoading(false);
+      }
     } else {
       alert("Please upload a valid image");
       setPicLoading(false);
     }
   };
 
+  // Form Submission Handler
   const submitHandler = async () => {
     if (!name || !email || !password || !confirmpassword) {
       alert("Please fill all the fields");
@@ -58,16 +60,18 @@ const Signup = () => {
 
     setPicLoading(true);
     try {
-      const { data } = await axios.post("/api/user", {
-        name,
-        email,
-        password,
-        pic,
-      });
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/users/register`,
+        {
+          name,
+          email,
+          password,
+          pic,
+        }
+      );
 
       alert("Registration Successful");
       localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/chats");
     } catch (error) {
       alert(error.response?.data?.message || "An error occurred");
     } finally {

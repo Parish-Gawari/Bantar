@@ -5,10 +5,10 @@ const router = express.Router();
 
 /**
  * @desc    Register a new user
- * @route   POST /api/users
+ * @route   POST /api/users/register
  * @access  Public
  */
-router.post("/", registerUser);
+router.post("/register", registerUser);
 
 /**
  * @desc    Authenticate user & get token
