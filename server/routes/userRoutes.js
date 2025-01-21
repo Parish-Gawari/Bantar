@@ -1,5 +1,10 @@
 const express = require("express");
-const { registerUser, authUser } = require("../controllers/userControllers"); // Fixed authuser typo
+const {
+  registerUser,
+  authUser,
+  allUsers,
+} = require("../controllers/userControllers");
+const { verify } = require("../middleware/authentication");
 
 const router = express.Router();
 
@@ -16,5 +21,12 @@ router.post("/register", registerUser);
  * @access  Public
  */
 router.post("/login", authUser);
+
+/**
+ * @desc    Get all users excluding the current user
+ * @route   GET /api/users/allUser
+ * @access  Private
+ */
+router.get("/allUser", verify, allUsers);
 
 module.exports = router;
