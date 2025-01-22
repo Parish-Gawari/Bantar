@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const { errorHandler } = require("./utils/errorHandler");
 
 dotenv.config();
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/users", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
