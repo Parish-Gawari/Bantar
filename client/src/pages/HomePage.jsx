@@ -6,12 +6,12 @@ import Signup from "../components/Signup";
 
 const Homepage = () => {
   const [activeTab, setActiveTab] = useState("login");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userInfo"));
-  //   if (user) navigate("/chats");
-  // }, [navigate]);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if (user) navigate("/chats");
+  }, [navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">

@@ -8,7 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const submitHandler = async () => {
     if (!email || !password) {
@@ -18,7 +18,13 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/user/login", { email, password });
+      const { data } = await axios.post(
+        "http://localhost:5005/api/users/login",
+        {
+          email,
+          password,
+        }
+      );
 
       alert("Login Successful");
       localStorage.setItem("userInfo", JSON.stringify(data));
