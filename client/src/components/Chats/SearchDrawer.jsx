@@ -4,14 +4,15 @@
 import { useState } from "react";
 import axios from "axios";
 import UserListItem from "../UserListItem";
+import { useChatContext } from "../../context/ChatProvider";
 
 const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
+  const { Chats } = useChatContext();
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  console.log(user);
   const handleSearch = async () => {
     if (!search) {
       setErrorMessage("Please enter something in the search.");
@@ -39,23 +40,23 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
   };
 
   const accessChat = async (userId) => {
+    console.log("are you even being called ?");
     try {
       setLoadingChat(true);
 
       const config = { headers: { Authorization: `Bearer ${user?.token}` } };
+
       const response = await axios.post(
         "http://localhost:5005/api/chat/access",
         { userId },
         config
       );
 
-      if (!setChats.find((chat) => chat._id === response.data._id)) {
-        setChats([response.data, ...setChats]);
+      if (!Chats?.find((chat) => chat._id === response?.data?.data?._id)) {
+        setChats((prevChats) => [response?.data?.data, ...(prevChats || [])]);
       }
-
-      setSelectedChat(response.data);
       setLoadingChat(false);
-      onClose(); // Close drawer after selecting a user
+      onClose();
     } catch (error) {
       setErrorMessage("Error occurred while accessing the chat.");
       setLoadingChat(false);

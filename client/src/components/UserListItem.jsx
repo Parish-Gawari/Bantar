@@ -1,5 +1,8 @@
+import { useChatContext } from "../context/ChatProvider";
+
 /* eslint-disable react/prop-types */
-const UserListItem = ({ handleFunction, user }) => {
+const UserListItem = ({ handleFunction }) => {
+  const { user } = useChatContext();
   return (
     <div
       onClick={handleFunction}
