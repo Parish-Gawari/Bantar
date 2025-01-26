@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import ChatHeader from "../components/Chats/ChatHeader";
+import MyChats from "../components/Chats/MyChats";
 import { useChatContext } from "../context/ChatProvider";
 
 const ChatPage = () => {
@@ -16,6 +17,7 @@ const ChatPage = () => {
   return (
     <div>
       <ChatHeader />
+      <MyChats />
     </div>
   );
 };

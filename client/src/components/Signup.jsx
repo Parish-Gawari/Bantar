@@ -71,7 +71,7 @@ const Signup = () => {
       );
 
       alert("Registration Successful");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data?.data));
     } catch (error) {
       alert(error.response?.data?.message || "An error occurred");
     } finally {

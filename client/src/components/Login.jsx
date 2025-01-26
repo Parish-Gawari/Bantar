@@ -27,7 +27,7 @@ const Login = () => {
       );
 
       alert("Login Successful");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data?.data));
       navigate("/chats");
     } catch (error) {
       alert(error.response?.data?.message || "Error occurred");

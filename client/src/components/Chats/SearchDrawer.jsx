@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 // SearchDrawer.js
 import { useState } from "react";
 import axios from "axios";
+import UserListItem from "../UserListItem";
 
 const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
   const [search, setSearch] = useState("");
@@ -9,7 +11,7 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  console.log(user);
   const handleSearch = async () => {
     if (!search) {
       setErrorMessage("Please enter something in the search.");
@@ -20,10 +22,15 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
       setLoading(true);
 
       // API call for search
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.get(`/api/user?search=${search}`, config);
-
-      setSearchResult(response.data);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      };
+      const response = await axios.get(
+        `http://localhost:5005/api/users/allUser?search=${search}`,
+        config
+      );
+      console.log(response?.data);
+      setSearchResult(response?.data?.data);
       setLoading(false);
     } catch (error) {
       setErrorMessage("Error occurred while fetching search results.");
@@ -35,8 +42,12 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
     try {
       setLoadingChat(true);
 
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.post(`/api/chat`, { userId }, config);
+      const config = { headers: { Authorization: `Bearer ${user?.token}` } };
+      const response = await axios.post(
+        "http://localhost:5005/api/chat/access",
+        { userId },
+        config
+      );
 
       if (!setChats.find((chat) => chat._id === response.data._id)) {
         setChats([response.data, ...setChats]);
@@ -88,12 +99,11 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
             <p className="text-gray-500">Loading...</p>
           ) : searchResult.length > 0 ? (
             searchResult.map((user) => (
-              <div
+              <UserListItem
                 key={user._id}
-                className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                onClick={() => accessChat(user._id)}>
-                {user.name}
-              </div>
+                user={user}
+                handleFunction={() => accessChat(user._id)}
+              />
             ))
           ) : (
             <p className="text-gray-500">No users found.</p>

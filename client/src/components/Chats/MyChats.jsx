@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { getSender } from "../config/ChatLogics";
+// import GroupChatModal from "./miscellaneous/GroupChatModal";
+import ErrorNotifier from "../ErrorNotifier";
+import { getSender } from "../../config/ChatLogic";
 import ChatLoading from "./ChatLoading";
-import GroupChatModal from "./miscellaneous/GroupChatModal";
-import { useChatContext } from "../Context/ChatProvider";
-import ErrorNotifier from "./ErrorNotifier";
+import { useChatContext } from "../../context/ChatProvider";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState(null);
@@ -13,17 +14,20 @@ const MyChats = ({ fetchAgain }) => {
 
   const { selectedChat, setSelectedChat, user, chats, setChats } =
     useChatContext();
-
-  const fetchChats = async () => {
+  const fetchChats = async (token) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
+      console.log(config);
 
-      const { data } = await axios.get("/api/chat", config);
-      setChats(data);
+      const { data } = await axios.get(
+        "http://localhost:5005/api/chat/fetch",
+        config
+      );
+      setChats(data?.data);
     } catch (error) {
       console.error(error);
       setError("Failed to load the chats.");
@@ -33,8 +37,7 @@ const MyChats = ({ fetchAgain }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     setLoggedUser(userInfo);
-    fetchChats();
-    // eslint-disable-next-line
+    fetchChats(userInfo?.token);
   }, [fetchAgain]);
 
   return (
@@ -52,20 +55,20 @@ const MyChats = ({ fetchAgain }) => {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between w-full pb-3 px-3 font-sans text-lg md:text-xl">
+      {/* <div className="flex items-center justify-between w-full pb-3 px-3 font-sans text-lg md:text-xl">
         <span>My Chats</span>
         <GroupChatModal>
           <button className="flex items-center px-3 py-2 bg-blue-500 text-white text-sm md:text-base rounded-lg hover:bg-blue-600">
             New Group Chat
           </button>
         </GroupChatModal>
-      </div>
+      </div> */}
 
       {/* Chats List */}
       <div className="flex flex-col p-3 bg-gray-100 w-full h-full rounded-lg overflow-hidden">
-        {chats ? (
+        {chats.length > 0 ? (
           <div className="flex flex-col gap-2 overflow-y-auto">
-            {chats.map((chat) => (
+            {chats?.map((chat) => (
               <div
                 key={chat._id}
                 onClick={() => setSelectedChat(chat)}
