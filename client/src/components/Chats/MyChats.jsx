@@ -44,7 +44,7 @@ const MyChats = ({ fetchAgain }) => {
     <div
       className={`${
         selectedChat ? "hidden md:flex" : "flex"
-      } flex-col items-center p-3 bg-white w-full md:w-1/3 rounded-lg border border-gray-300`}>
+      } flex-col items-center p-3 bg-white w-full md:w-3/3 rounded-lg border-0 border-gray-300 `}>
       {/* Error Notification */}
       {error && (
         <ErrorNotifier
