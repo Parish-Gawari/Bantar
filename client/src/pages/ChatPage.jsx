@@ -15,9 +15,16 @@ const ChatPage = () => {
   } = useChatContext();
 
   return (
-    <div>
-      <ChatHeader />
-      <MyChats />
+    <div className="flex flex-col h-screen">
+      {/* Chat Header */}
+      <header className="flex-shrink-0">
+        <ChatHeader />
+      </header>
+
+      {/* Main Chat Section */}
+      <main className="flex-grow bg-gray-100 p-4">
+        <MyChats />
+      </main>
     </div>
   );
 };

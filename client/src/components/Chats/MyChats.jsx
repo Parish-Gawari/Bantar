@@ -7,6 +7,7 @@ import ErrorNotifier from "../ErrorNotifier";
 import { getSender } from "../../config/ChatLogic";
 import ChatLoading from "./ChatLoading";
 import { useChatContext } from "../../context/ChatProvider";
+import GroupChatModal from "./GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState(null);
@@ -54,14 +55,14 @@ const MyChats = ({ fetchAgain }) => {
       )}
 
       {/* Header */}
-      {/* <div className="flex items-center justify-between w-full pb-3 px-3 font-sans text-lg md:text-xl">
+      <div className="flex items-center justify-between w-full pb-3 px-3 font-sans text-lg md:text-xl">
         <span>My Chats</span>
         <GroupChatModal>
           <button className="flex items-center px-3 py-2 bg-blue-500 text-white text-sm md:text-base rounded-lg hover:bg-blue-600">
             New Group Chat
           </button>
         </GroupChatModal>
-      </div> */}
+      </div>
 
       {/* Chats List */}
       <div className="flex flex-col p-3 bg-gray-100 w-full h-full rounded-lg overflow-hidden">
