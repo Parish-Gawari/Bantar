@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useChatContext } from "../../context/ChatProvider";
+import UserListItem from "../UserListItem";
 
 const GroupChatModal = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,14 +130,15 @@ const GroupChatModal = ({ children }) => {
             {loading ? (
               <div className="text-center text-gray-500">Loading...</div>
             ) : (
-              searchResult.slice(0, 4).map((user) => (
-                <div
-                  key={user._id}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg mb-2 cursor-pointer"
-                  onClick={() => handleGroup(user)}>
-                  {user.name}
-                </div>
-              ))
+              searchResult
+                .slice(0, 4)
+                .map((user) => (
+                  <UserListItem
+                    key={user._id}
+                    user={user}
+                    handleFunction={() => handleGroup(user)}
+                  />
+                ))
             )}
 
             {errorMessage && (
