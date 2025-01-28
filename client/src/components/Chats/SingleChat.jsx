@@ -6,7 +6,6 @@ import Lottie from "lottie-react";
 import animationData from "../../misc/typing.json";
 import { getSender, getSenderFull } from "../../config/ChatLogic";
 import ProfileModal from "../ProfileModal";
-// import ScrollableChat from "./ScrollableChat";
 import UpdateGroupChatModal from "../Chats/UpdateGroupChatModel";
 import { useChatContext } from "../../context/ChatProvider";
 
@@ -131,10 +130,11 @@ const SingleChat = ({
   return (
     <>
       {selectedChat ? (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full w-full border-0">
+          {/* Chat Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-gray-200 rounded-t-lg">
             <button
-              className="flex items-center px-3 py-1 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400"
+              className="px-3 py-1 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400"
               onClick={() => setSelectedChat(null)}>
               Back
             </button>
@@ -142,9 +142,14 @@ const SingleChat = ({
               (!selectedChat.isGroupChat ? (
                 <div className="flex items-center space-x-2">
                   <span>{getSender(user, selectedChat.users)}</span>
+                  <button
+                    onClick={() => setIsProfileModalOpen(true)}
+                    className="text-blue-600 hover:underline">
+                    View Profile
+                  </button>
                   {isProfileModalOpen && (
                     <ProfileModal
-                      user={user?.data}
+                      user={getSenderFull(user, selectedChat.users)}
                       onClose={() => setIsProfileModalOpen(false)}
                     />
                   )}
@@ -160,16 +165,21 @@ const SingleChat = ({
                 </div>
               ))}
           </div>
+
+          {/* Chat Body */}
           <div className="flex-grow p-4 overflow-y-auto bg-gray-100 rounded-b-lg">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <div className="w-10 h-10 border-4 border-gray-300 rounded-full animate-spin"></div>
               </div>
             ) : (
-              <span>Sike...........!</span>
-              //   <ScrollableChat messages={messages} />
+              <div className="messages">
+                {/* <ScrollableChat messages={messages} /> */}
+              </div>
             )}
           </div>
+
+          {/* Typing Indicator and Message Input */}
           <div className="p-4 bg-gray-200">
             {isTyping && (
               <div className="mb-2">
@@ -181,7 +191,6 @@ const SingleChat = ({
                 />
               </div>
             )}
-
             <input
               type="text"
               placeholder="Enter a message..."
