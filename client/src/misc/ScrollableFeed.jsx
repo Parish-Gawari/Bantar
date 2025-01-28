@@ -14,7 +14,7 @@ const ScrollableChat = ({ messages }) => {
   return (
     <ScrollableFeed>
       {messages &&
-        messages?.data?.map((m, i) => (
+        messages?.map((m, i) => (
           <div key={m._id} className="flex items-start mb-2">
             {/* Avatar */}
             {(isSameSender(messages, m, i, user._id) ||

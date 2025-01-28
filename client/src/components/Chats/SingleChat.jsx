@@ -45,9 +45,9 @@ const SingleChat = ({
         `http://localhost:5005/api/message/${selectedChat._id}`,
         config
       );
-      setMessages(data);
+      setMessages(data?.data);
       setLoading(false);
-
+      console.log(data?.data);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error("Failed to load messages", error);
@@ -71,8 +71,8 @@ const SingleChat = ({
           { content: newMessage, chatId: selectedChat },
           config
         );
-        socket.emit("new message", data);
-        setMessages([...messages, data]);
+        socket.emit("new message", data?.data);
+        setMessages([...messages, data?.data]);
       } catch (error) {
         console.error("Failed to send message", error);
       }
