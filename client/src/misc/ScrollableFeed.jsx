@@ -10,24 +10,23 @@ import { useChatContext } from "../context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = useChatContext();
-  console.log(messages);
+
   return (
     <ScrollableFeed>
       {messages &&
         messages?.map((m, i) => (
           <div key={m._id} className="flex items-start mb-2">
-            {/* Avatar */}
+            {/* Avatar - Aligning with the latest message */}
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
-              <div className="relative">
+              <div
+                className={`relative ${
+                  m.sender._id === user._id ? "ml-auto" : ""
+                }`}>
                 <img
-                  className="h-8 w-8 rounded-full mt-1 mr-2 cursor-pointer"
+                  className="h-8 w-8 rounded-full mt-4 mr-2 cursor-pointer"
                   src={m.sender.pic}
-                  alt={m.sender.name}
                 />
-                <div className="absolute bottom-0 left-0 text-xs text-white bg-black rounded-full px-1 py-0.5">
-                  {m.sender.name}
-                </div>
               </div>
             )}
 
