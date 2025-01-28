@@ -13,9 +13,9 @@ const ChatHeader = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for profile dropdown
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // State for profile modal
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const {
     user,

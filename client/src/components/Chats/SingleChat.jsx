@@ -25,6 +25,7 @@ const SingleChat = ({
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const { selectedChat, setSelectedChat, user } = useChatContext();
 
@@ -40,7 +41,7 @@ const SingleChat = ({
 
       setLoading(true);
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `http://localhost:5005/api/message/${selectedChat._id}`,
         config
       );
       setMessages(data);
@@ -65,7 +66,7 @@ const SingleChat = ({
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "/api/message",
+          "http://localhost:5005/api/message",
           { content: newMessage, chatId: selectedChat },
           config
         );
@@ -141,9 +142,12 @@ const SingleChat = ({
               (!selectedChat.isGroupChat ? (
                 <div className="flex items-center space-x-2">
                   <span>{getSender(user, selectedChat.users)}</span>
-                  <ProfileModal
-                    user={getSenderFull(user, selectedChat.users)}
-                  />
+                  {isProfileModalOpen && (
+                    <ProfileModal
+                      user={user?.data}
+                      onClose={() => setIsProfileModalOpen(false)}
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
