@@ -8,6 +8,8 @@ import { getSender, getSenderFull } from "../../config/ChatLogic";
 import ProfileModal from "../ProfileModal";
 import UpdateGroupChatModal from "../Chats/UpdateGroupChatModel";
 import { useChatContext } from "../../context/ChatProvider";
+import { ArrowLeftIcon, EyeIcon } from "@heroicons/react/24/outline";
+import ScrollableChat from "../../misc/ScrollableFeed";
 
 const ENDPOINT = "http://localhost:5005";
 let socket, selectedChatCompare;
@@ -134,9 +136,9 @@ const SingleChat = ({
           {/* Chat Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-gray-200 rounded-t-lg">
             <button
-              className="px-3 py-1 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400"
+              className="p-2 text-gray-700 bg-gray-300 rounded hover:bg-gray-400"
               onClick={() => setSelectedChat(null)}>
-              Back
+              <ArrowLeftIcon className="h-5 w-5" />
             </button>
             {messages &&
               (!selectedChat.isGroupChat ? (
@@ -144,8 +146,8 @@ const SingleChat = ({
                   <span>{getSender(user, selectedChat.users)}</span>
                   <button
                     onClick={() => setIsProfileModalOpen(true)}
-                    className="text-blue-600 hover:underline">
-                    View Profile
+                    className="text-gray-700 hover:text-gray-900">
+                    <EyeIcon className="h-5 w-5" />
                   </button>
                   {isProfileModalOpen && (
                     <ProfileModal
@@ -174,7 +176,7 @@ const SingleChat = ({
               </div>
             ) : (
               <div className="messages">
-                {/* <ScrollableChat messages={messages} /> */}
+                <ScrollableChat messages={messages} />
               </div>
             )}
           </div>
