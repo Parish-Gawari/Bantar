@@ -1,5 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ErrorNotifier from "./ErrorNotifier";
+import SuccessNotifier from "./SuccessNotifier";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,12 +13,14 @@ const Signup = () => {
   const [confirmpassword, setConfirmpassword] = useState("");
   const [pic, setPic] = useState("");
   const [picLoading, setPicLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
 
   // Image Upload with Axios
   const handleImageUpload = async (file) => {
     setPicLoading(true);
     if (!file) {
-      alert("Please select an image");
+      setErrorMessage("Please select an image");
       setPicLoading(false);
       return;
     }
@@ -36,12 +42,12 @@ const Signup = () => {
         setPic(response.data.url);
       } catch (error) {
         console.error("Image upload failed:", error);
-        alert("Image upload failed");
+        setErrorMessage("Image upload failed");
       } finally {
         setPicLoading(false);
       }
     } else {
-      alert("Please upload a valid image");
+      setErrorMessage("Please upload a valid image");
       setPicLoading(false);
     }
   };
@@ -49,12 +55,12 @@ const Signup = () => {
   // Form Submission Handler
   const submitHandler = async () => {
     if (!name || !email || !password || !confirmpassword) {
-      alert("Please fill all the fields");
+      setErrorMessage("Please fill all the fields");
       return;
     }
 
     if (password !== confirmpassword) {
-      alert("Passwords do not match");
+      setErrorMessage("Passwords do not match");
       return;
     }
 
@@ -66,14 +72,16 @@ const Signup = () => {
           name,
           email,
           password,
-          pic,
+          pic: pic || "",
         }
       );
 
-      alert("Registration Successful");
       localStorage.setItem("userInfo", JSON.stringify(data?.data));
+      navigate("/chats", {
+        state: { successMessage: "Registration Successful" },
+      });
     } catch (error) {
-      alert(error.response?.data?.message || "An error occurred");
+      setErrorMessage(error.response?.data?.message || "An error occurred");
     } finally {
       setPicLoading(false);
     }
@@ -81,6 +89,14 @@ const Signup = () => {
 
   return (
     <div className="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      {/* Error Notifier */}
+      {errorMessage && (
+        <ErrorNotifier
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
+
       <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
 
       {/* Name */}

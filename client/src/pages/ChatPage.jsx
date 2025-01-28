@@ -3,14 +3,35 @@ import ChatHeader from "../components/Chats/ChatHeader";
 import ChatSection from "../components/Chats/ChatSection";
 import MyChats from "../components/Chats/MyChats";
 import { useChatContext } from "../context/ChatProvider";
-import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import SuccessNotifier from "../components/SuccessNotifier";
 
 const ChatPage = () => {
   const { user } = useChatContext();
+  const location = useLocation();
   const [fetchAgain, setFetchAgain] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(
+    location.state?.successMessage || null
+  );
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 5000); // Auto-hide the notification after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   return (
     <div className="flex flex-col h-screen">
+      {/* Success Notification */}
+      {successMessage && (
+        <SuccessNotifier
+          message={successMessage}
+          onClose={() => setSuccessMessage(null)}
+        />
+      )}
+
       {/* Chat Header */}
       <header className="flex-shrink-0">{user && <ChatHeader />}</header>
 

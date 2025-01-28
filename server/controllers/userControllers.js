@@ -56,7 +56,19 @@ const registerUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(400, "User already exists"));
   }
 
-  const user = await User.create({ name, email, password, pic });
+  // Create user object
+  const userData = {
+    name,
+    email,
+    password,
+  };
+
+  // Only include pic if it's provided
+  if (pic && pic.trim() !== "") {
+    userData.pic = pic;
+  }
+
+  const user = await User.create(userData);
 
   if (user) {
     res.status(201).json({

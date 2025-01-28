@@ -2,17 +2,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ErrorNotifier from "./ErrorNotifier";
+import SuccessNotifier from "./SuccessNotifier";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
 
   const submitHandler = async () => {
     if (!email || !password) {
-      alert("Please fill all the fields");
+      setErrorMessage("Please fill all the fields");
       return;
     }
 
@@ -26,11 +30,15 @@ const Login = () => {
         }
       );
 
-      alert("Login Successful");
+      setSuccessMessage("Login Successful");
       localStorage.setItem("userInfo", JSON.stringify(data?.data));
-      navigate("/chats");
+      navigate("/chats", {
+        state: { successMessage: "Login Successful" },
+      });
     } catch (error) {
-      alert(error.response?.data?.message || "Error occurred");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while logging in"
+      );
     } finally {
       setLoading(false);
     }
@@ -39,6 +47,22 @@ const Login = () => {
   return (
     <div className="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+
+      {/* Error Notification */}
+      {errorMessage && (
+        <ErrorNotifier
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
+
+      {/* Success Notification */}
+      {successMessage && (
+        <SuccessNotifier
+          message={successMessage}
+          onClose={() => setSuccessMessage(null)}
+        />
+      )}
 
       {/* Email Input */}
       <div className="mb-4">

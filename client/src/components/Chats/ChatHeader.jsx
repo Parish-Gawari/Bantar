@@ -25,6 +25,7 @@ const ChatHeader = () => {
     chats,
     setChats,
   } = useChatContext();
+
   const handleSearch = async () => {
     if (!search) {
       setErrorMessage("Please enter something in the search.");
@@ -36,7 +37,10 @@ const ChatHeader = () => {
 
       // Simulated API call for search
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.get(`/api/user?search=${search}`, config);
+      const response = await axios.get(
+        `http://localhost:5005/api/user?search=${search}`,
+        config
+      );
 
       setSearchResult(response.data);
       setLoading(false);
@@ -51,7 +55,11 @@ const ChatHeader = () => {
       setLoadingChat(true);
 
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.post(`/api/chat`, { userId }, config);
+      const response = await axios.post(
+        `http://localhost/api/chat`,
+        { userId },
+        config
+      );
 
       if (!chats.find((chat) => chat._id === response.data._id)) {
         setChats([response.data, ...chats]);
@@ -104,8 +112,8 @@ const ChatHeader = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
             <img
-              src={user?.data?.pic}
-              alt={user?.data?.name}
+              src={user?.pic}
+              alt={user?.name}
               className="w-8 h-8 rounded-full"
             />
             <ChevronDownIcon className="w-5 h-5" />
@@ -114,8 +122,8 @@ const ChatHeader = () => {
             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-md rounded-lg z-50">
               <div
                 onClick={() => {
-                  setIsDropdownOpen(false); // Close dropdown
-                  setIsProfileModalOpen(true); // Open profile modal
+                  setIsDropdownOpen(false);
+                  setIsProfileModalOpen(true);
                 }}
                 className="p-2 hover:bg-gray-100 cursor-pointer">
                 My Profile

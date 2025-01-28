@@ -15,7 +15,6 @@ const GroupChatModal = ({ children }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { user, chats, setChats } = useChatContext();
-  console.log(user);
   const handleGroup = (userToAdd) => {
     if (selectedUsers.includes(userToAdd)) {
       setErrorMessage("User already added");
