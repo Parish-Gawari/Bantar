@@ -47,7 +47,6 @@ const SingleChat = ({
       );
       setMessages(data?.data);
       setLoading(false);
-      console.log(data?.data);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error("Failed to load messages", error);

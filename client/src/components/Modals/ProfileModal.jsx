@@ -14,11 +14,11 @@ const ProfileModal = ({ user, onClose }) => {
         <div className="mt-4">
           <img
             className="rounded-full w-24 h-24 object-cover mx-auto"
-            src={user.pic}
-            alt={user.name}
+            src={user?.pic}
+            alt={user?.name}
           />
-          <h3 className="text-center text-xl mt-2">{user.name}</h3>
-          <p className="text-center text-gray-500">{user.email}</p>
+          <h3 className="text-center text-xl mt-2">{user?.name}</h3>
+          <p className="text-center text-gray-500">{user?.email}</p>
         </div>
       </div>
     </div>

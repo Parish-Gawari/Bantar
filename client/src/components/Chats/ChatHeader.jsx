@@ -4,12 +4,11 @@ import { BellIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useChatContext } from "../../context/ChatProvider";
 import axios from "axios";
 import ErrorNotifier from "../../misc/ErrorNotifier";
-import ProfileModal from "../Modals/ProfileModal";
 import SearchDrawer from "./SearchDrawer";
+import ProfileModal from "../Modals/ProfileModal";
 
 const ChatHeader = () => {
   const [search, setSearch] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -26,48 +25,12 @@ const ChatHeader = () => {
     setChats,
   } = useChatContext();
 
-  const handleSearch = async () => {
-    if (!search) {
-      setErrorMessage("Please enter something in the search.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Simulated API call for search
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.get(
-        `http://localhost:5005/api/user?search=${search}`,
-        config
-      );
-
-      setSearchResult(response.data);
-      setLoading(false);
-    } catch (error) {
-      setErrorMessage("Error occurred while fetching search results.");
-      setLoading(false);
-    }
-  };
-
-  const accessChat = async (userId) => {
+  const accessChat = async (chat) => {
     try {
       setLoadingChat(true);
-
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const response = await axios.post(
-        `http://localhost/api/chat`,
-        { userId },
-        config
-      );
-
-      if (!chats.find((chat) => chat._id === response.data._id)) {
-        setChats([response.data, ...chats]);
-      }
-
-      setSelectedChat(response.data);
+      setSelectedChat(chat);
+      setNotification(notification.filter((n) => n.chat._id !== chat._id));
       setLoadingChat(false);
-      setIsDrawerOpen(false);
     } catch (error) {
       setErrorMessage("Error occurred while accessing the chat.");
       setLoadingChat(false);
@@ -104,6 +67,20 @@ const ChatHeader = () => {
               </span>
             )}
           </button>
+          {notification.length > 0 && (
+            <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-md rounded-lg z-50">
+              {notification.map((notif) => (
+                <div
+                  key={notif._id}
+                  onClick={() => accessChat(notif.chat)}
+                  className="p-2 hover:bg-gray-100 cursor-pointer">
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message from ${notif.chat.users[0].name}`}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Profile Dropdown */}
@@ -139,55 +116,6 @@ const ChatHeader = () => {
         </div>
       </div>
 
-      {/* Search Drawer */}
-      {/* {isDrawerOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white w-96 rounded-lg shadow-lg p-4">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h2 className="text-lg font-bold">Search Users</h2>
-              <button
-                onClick={() => setIsDrawerOpen(false)}
-                className="text-gray-600 hover:text-gray-900">
-                &times;
-              </button>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <input
-                type="text"
-                placeholder="Search by name or email"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="flex-grow border border-gray-300 rounded-lg p-2"
-              />
-              <button
-                onClick={handleSearch}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                Search
-              </button>
-            </div>
-            <div className="mt-4">
-              {loading ? (
-                <p className="text-gray-500">Loading...</p>
-              ) : (
-                searchResult.map((user) => (
-                  <div
-                    key={user._id}
-                    className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                    onClick={() => accessChat(user._id)}>
-                    {user.name}
-                  </div>
-                ))
-              )}
-              {loadingChat && (
-                <p className="text-center text-gray-500 mt-4">
-                  Opening chat...
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      )} */}
-
       {/* Global Error Notifier */}
       {errorMessage && (
         <ErrorNotifier
@@ -199,7 +127,7 @@ const ChatHeader = () => {
       {/* Profile Modal */}
       {isProfileModalOpen && (
         <ProfileModal
-          user={user?.data}
+          user={user}
           onClose={() => setIsProfileModalOpen(false)}
         />
       )}
