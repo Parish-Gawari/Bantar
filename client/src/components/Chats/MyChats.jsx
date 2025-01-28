@@ -4,11 +4,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 // import GroupChatModal from "./miscellaneous/GroupChatModal";
-import ErrorNotifier from "../ErrorNotifier";
+import ErrorNotifier from "../../misc/ErrorNotifier";
 import { getSender } from "../../config/ChatLogic";
 import ChatLoading from "./ChatLoading";
 import { useChatContext } from "../../context/ChatProvider";
-import GroupChatModal from "./GroupChatModal";
+import GroupChatModal from "../Modals/GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState(null);

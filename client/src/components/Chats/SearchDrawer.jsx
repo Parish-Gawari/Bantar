@@ -3,7 +3,7 @@
 // SearchDrawer.js
 import { useState } from "react";
 import axios from "axios";
-import UserListItem from "../UserListItem";
+import UserListItem from "../../misc/UserListItem";
 import { useChatContext } from "../../context/ChatProvider";
 
 const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {

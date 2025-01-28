@@ -3,9 +3,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useChatContext } from "../../context/ChatProvider";
-import UserBadgeItem from "../UserBadgeItem";
-import UserListItem from "../UserListItem";
-import ErrorNotifier from "../ErrorNotifier";
+import UserBadgeItem from "../../misc/UserBadgeItem";
+import UserListItem from "../../misc/UserListItem";
+import ErrorNotifier from "../../misc/ErrorNotifier";
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const [isOpen, setIsOpen] = useState(false);

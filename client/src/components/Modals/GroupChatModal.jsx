@@ -3,7 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useChatContext } from "../../context/ChatProvider";
-import UserListItem from "../UserListItem";
+import UserListItem from "../../misc/UserListItem";
 
 const GroupChatModal = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);

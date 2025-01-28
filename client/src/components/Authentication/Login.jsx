@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ErrorNotifier from "./ErrorNotifier";
-import SuccessNotifier from "./SuccessNotifier";
+import ErrorNotifier from "../../misc/ErrorNotifier";
+import SuccessNotifier from "../../misc/SuccessNotifier";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);

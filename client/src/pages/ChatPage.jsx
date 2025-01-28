@@ -5,7 +5,7 @@ import MyChats from "../components/Chats/MyChats";
 import { useChatContext } from "../context/ChatProvider";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import SuccessNotifier from "../components/SuccessNotifier";
+import SuccessNotifier from "../misc/SuccessNotifier";
 
 const ChatPage = () => {
   const { user } = useChatContext();

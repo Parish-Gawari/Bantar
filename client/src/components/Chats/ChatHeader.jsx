@@ -3,8 +3,8 @@ import { useState } from "react";
 import { BellIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useChatContext } from "../../context/ChatProvider";
 import axios from "axios";
-import ErrorNotifier from "../ErrorNotifier";
-import ProfileModal from "../ProfileModal";
+import ErrorNotifier from "../../misc/ErrorNotifier";
+import ProfileModal from "../Modals/ProfileModal";
 import SearchDrawer from "./SearchDrawer";
 
 const ChatHeader = () => {
