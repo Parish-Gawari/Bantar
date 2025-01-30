@@ -42,13 +42,17 @@ const SingleChat = ({
       };
 
       setLoading(true);
+
+      console.log("Joining chat room:", selectedChat._id);
+      socket.emit("join chat", selectedChat._id); // Join chat before fetching messages
+
       const { data } = await axios.get(
         `http://localhost:5005/api/message/${selectedChat._id}`,
         config
       );
+
       setMessages(data?.data);
       setLoading(false);
-      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error("Failed to load messages", error);
     }
@@ -65,14 +69,20 @@ const SingleChat = ({
             Authorization: `Bearer ${user.token}`,
           },
         };
+
+        console.log("Sending message:", newMessage);
         setNewMessage("");
+
         const { data } = await axios.post(
           "http://localhost:5005/api/message",
           { content: newMessage, chatId: selectedChat },
           config
         );
+
+        console.log("Message sent and emitted:", data?.data);
         socket.emit("new message", data?.data);
-        setMessages([...messages, data?.data]);
+
+        setMessages((prevMessages) => [...prevMessages, data?.data]);
       } catch (error) {
         console.error("Failed to send message", error);
       }
@@ -85,6 +95,11 @@ const SingleChat = ({
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
+
+    return () => {
+      socket.off("typing");
+      socket.off("stop typing");
+    };
   }, []);
 
   useEffect(() => {
@@ -93,19 +108,42 @@ const SingleChat = ({
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("message received", (newMessageRecieved) => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain);
+    const messageListener = (newMessageRecieved) => {
+      console.log("Message received on frontend:", newMessageRecieved);
+
+      setMessages((prevMessages) => {
+        // Prevent duplicates
+        const messageExists = prevMessages.some(
+          (msg) => msg._id === newMessageRecieved._id
+        );
+        if (messageExists) return prevMessages;
+
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          if (!notification.some((n) => n._id === newMessageRecieved._id)) {
+            console.log(
+              "New notification for another chat:",
+              newMessageRecieved.chat._id
+            );
+            setNotification((prev) => [newMessageRecieved, ...prev]);
+            setFetchAgain((prev) => !prev);
+          }
+        } else {
+          console.log("Adding message to chat:", newMessageRecieved);
+          return [...prevMessages, newMessageRecieved];
         }
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    });
+
+        return prevMessages;
+      });
+    };
+
+    socket.on("message received", messageListener);
+
+    return () => {
+      socket.off("message received", messageListener);
+    };
   });
 
   const typingHandler = (e) => {
@@ -117,6 +155,7 @@ const SingleChat = ({
       setTyping(true);
       socket.emit("typing", selectedChat._id);
     }
+
     let lastTypingTime = new Date().getTime();
     const timerLength = 3000;
     setTimeout(() => {
@@ -175,9 +214,7 @@ const SingleChat = ({
                 <div className="w-10 h-10 border-4 border-gray-300 rounded-full animate-spin"></div>
               </div>
             ) : (
-              <div className="messages">
-                <ScrollableChat messages={messages} />
-              </div>
+              <ScrollableChat messages={messages} />
             )}
           </div>
 

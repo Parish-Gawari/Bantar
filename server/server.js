@@ -65,20 +65,19 @@ io.on("connection", (socket) => {
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
-  socket.on("new message", (newMessageRecieved) => {
-    var chat = newMessageRecieved.chat;
+  socket.on("new message", (newMessageReceived) => {
+    var chat = newMessageReceived.chat;
 
     if (!chat.users) return console.log("chat.users not found");
-    console.log("Emitting message received:", newMessageRecieved); // Log the message to ensure it is emitted correctly
+    console.log("Emitting message received:", newMessageReceived); // Log the message to ensure it is emitted correctly
     chat.users.forEach((user) => {
-      if (user._id === newMessageRecieved.sender._id) return;
-
-      socket.in(user._id).emit("message recieved", newMessageRecieved);
+      if (user._id === newMessageReceived.sender._id) return;
+      console.log("message received", newMessageReceived);
+      socket.in(chat._id).emit("message received", newMessageReceived);
     });
   });
 
-  socket.off("setup", () => {
+  socket.on("disconnect", () => {
     console.log("USER DISCONNECTED");
-    socket.leave(userData._id);
   });
 });
