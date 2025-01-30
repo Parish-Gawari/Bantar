@@ -16,7 +16,6 @@ const ScrollableChat = ({ messages }) => {
       {messages &&
         messages?.map((m, i) => (
           <div key={m._id} className="flex items-start mb-2">
-            {/* Avatar - Aligning with the latest message */}
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
               <div
