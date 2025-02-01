@@ -47,6 +47,7 @@ const io = require("socket.io")(server, {
   cors: {
     origin: process.env.FRONTEND_URL,
   },
+  transports: ["websocket", "polling"], // this for deployment purpose on railways
 });
 
 io.on("connection", (socket) => {
