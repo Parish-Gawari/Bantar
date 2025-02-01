@@ -13,7 +13,7 @@ import { ArrowLeftIcon, EyeIcon } from "@heroicons/react/24/outline";
 import "../../index.css";
 import ScrollableChat from "../../misc/ScrollableFeed";
 
-const ENDPOINT = "http://localhost:5005";
+const ENDPOINT = import.meta.env.VITE_BASE_URL || "http://localhost:5005";
 let socket, selectedChatCompare;
 
 const SingleChat = ({
@@ -44,7 +44,7 @@ const SingleChat = ({
       socket.emit("join chat", selectedChat._id); // Join chat before fetching messages
 
       const { data } = await axios.get(
-        `http://localhost:5005/api/message/${selectedChat._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/message/${selectedChat._id}`,
         config
       );
 
@@ -70,7 +70,7 @@ const SingleChat = ({
         setNewMessage("");
 
         const { data } = await axios.post(
-          "http://localhost:5005/api/message",
+          `${import.meta.env.VITE_BASE_URL}/api/message`,
           { content: newMessage, chatId: selectedChat },
           config
         );

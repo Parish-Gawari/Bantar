@@ -49,7 +49,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.put(
-        `http://localhost:5005/api/chat/rename`,
+        `${import.meta.env.VITE_BASE_URL}/api/chat/rename`,
         { chatId: selectedChat._id, chatName: groupChatName },
         config
       );
@@ -81,7 +81,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.put(
-        `http://localhost:5005/api/chat/groupadd`,
+        `${import.meta.env.VITE_BASE_URL}/api/chat/groupadd`,
         { chatId: selectedChat._id, userId: userToAdd._id },
         config
       );

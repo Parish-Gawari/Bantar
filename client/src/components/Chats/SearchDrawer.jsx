@@ -27,7 +27,7 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
         headers: { Authorization: `Bearer ${user?.token}` },
       };
       const response = await axios.get(
-        `http://localhost:5005/api/users/allUser?search=${search}`,
+        `${import.meta.env.VITE_BASE_URL}/api/users/allUser?search=${search}`,
         config
       );
       setSearchResult(response?.data?.data);
@@ -45,7 +45,7 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
       const config = { headers: { Authorization: `Bearer ${user?.token}` } };
 
       const response = await axios.post(
-        "http://localhost:5005/api/chat/access",
+        `${import.meta.env.VITE_BASE_URL}/api/chat/access`,
         { userId },
         config
       );
