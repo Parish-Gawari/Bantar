@@ -6,6 +6,7 @@ import { useChatContext } from "../context/ChatProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SuccessNotifier from "../misc/SuccessNotifier";
+import "../index.css";
 
 const ChatPage = () => {
   const { user } = useChatContext();
@@ -28,7 +29,7 @@ const ChatPage = () => {
   }, [successMessage, navigate, location.pathname]);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col main">
       {/* Success Notification */}
       {successMessage && (
         <SuccessNotifier
@@ -41,7 +42,7 @@ const ChatPage = () => {
       <header className="flex-shrink-0">{user && <ChatHeader />}</header>
 
       {/* Main Chat Section */}
-      <main className="flex-grow bg-black p-4 flex flex-col md:flex-row gap-4">
+      <main className="flex-grow bg-black p-4 flex flex-col md:flex-row gap-4 chatContainer">
         {/* My Chats Section */}
         {user && (
           <div className="flex flex-col w-full md:w-1/3 lg:w-1/4 bg-white rounded-lg shadow-md border border-gray-300">

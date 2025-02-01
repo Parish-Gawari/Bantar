@@ -10,6 +10,7 @@ import ProfileModal from "../Modals/ProfileModal";
 import UpdateGroupChatModal from "../Modals/UpdateGroupChatModel";
 import { useChatContext } from "../../context/ChatProvider";
 import { ArrowLeftIcon, EyeIcon } from "@heroicons/react/24/outline";
+import "../../index.css";
 import ScrollableChat from "../../misc/ScrollableFeed";
 
 const ENDPOINT = "http://localhost:5005";
@@ -36,14 +37,10 @@ const SingleChat = ({
 
     try {
       const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
+        headers: { Authorization: `Bearer ${user.token}` },
       };
 
       setLoading(true);
-
-      console.log("Joining chat room:", selectedChat._id);
       socket.emit("join chat", selectedChat._id); // Join chat before fetching messages
 
       const { data } = await axios.get(
@@ -70,7 +67,6 @@ const SingleChat = ({
           },
         };
 
-        console.log("Sending message:", newMessage);
         setNewMessage("");
 
         const { data } = await axios.post(
@@ -79,9 +75,7 @@ const SingleChat = ({
           config
         );
 
-        console.log("Message sent and emitted:", data?.data);
         socket.emit("new message", data?.data);
-
         setMessages((prevMessages) => [...prevMessages, data?.data]);
       } catch (error) {
         console.error("Failed to send message", error);
@@ -109,10 +103,7 @@ const SingleChat = ({
 
   useEffect(() => {
     const messageListener = (newMessageRecieved) => {
-      console.log("Message received on frontend:", newMessageRecieved);
-
       setMessages((prevMessages) => {
-        // Prevent duplicates
         const messageExists = prevMessages.some(
           (msg) => msg._id === newMessageRecieved._id
         );
@@ -123,15 +114,10 @@ const SingleChat = ({
           selectedChatCompare._id !== newMessageRecieved.chat._id
         ) {
           if (!notification.some((n) => n._id === newMessageRecieved._id)) {
-            console.log(
-              "New notification for another chat:",
-              newMessageRecieved.chat._id
-            );
             setNotification((prev) => [newMessageRecieved, ...prev]);
             setFetchAgain((prev) => !prev);
           }
         } else {
-          console.log("Adding message to chat:", newMessageRecieved);
           return [...prevMessages, newMessageRecieved];
         }
 
@@ -160,8 +146,7 @@ const SingleChat = ({
     const timerLength = 3000;
     setTimeout(() => {
       const timeNow = new Date().getTime();
-      const timeDiff = timeNow - lastTypingTime;
-      if (timeDiff >= timerLength && typing) {
+      if (timeNow - lastTypingTime >= timerLength && typing) {
         socket.emit("stop typing", selectedChat._id);
         setTyping(false);
       }
@@ -207,8 +192,8 @@ const SingleChat = ({
               ))}
           </div>
 
-          {/* Chat Body */}
-          <div className="flex-grow p-4 overflow-y-auto bg-gray-100 rounded-b-lg">
+          {/* Chat Body - Restrict height to prevent entire app from scrolling */}
+          <div className="flex-grow overflow-y-auto p-4 bg-gray-100 rounded-b-lg h-[calc(100vh-150px)]">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <div className="w-10 h-10 border-4 border-gray-300 rounded-full animate-spin"></div>
