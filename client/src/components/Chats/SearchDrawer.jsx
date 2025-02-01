@@ -30,7 +30,6 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
         `http://localhost:5005/api/users/allUser?search=${search}`,
         config
       );
-      console.log(response?.data);
       setSearchResult(response?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -40,7 +39,6 @@ const SearchDrawer = ({ isOpen, onClose, user, setChats, setSelectedChat }) => {
   };
 
   const accessChat = async (userId) => {
-    console.log("are you even being called ?");
     try {
       setLoadingChat(true);
 

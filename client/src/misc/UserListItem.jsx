@@ -3,7 +3,6 @@
 /* eslint-disable react/prop-types */
 const UserListItem = ({ handleFunction, user }) => {
   // const { user } = useChatContext();
-  console.log(user);
   return (
     <div
       onClick={handleFunction}
