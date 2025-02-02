@@ -45,23 +45,19 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: "http://localhost:3000" || process.env.FRONTEND_URL,
   },
   transports: ["websocket", "polling"], // this for deployment purpose on railways
 });
 
 io.on("connection", (socket) => {
-  console.log("Connected to Socket.io");
-
   socket.on("setup", (userData) => {
-    console.log("Setup event received with user data: ", userData);
     socket.join(userData?._id);
     socket.emit("connected");
   });
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User joined room:", room);
   });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
@@ -70,10 +66,8 @@ io.on("connection", (socket) => {
     var chat = newMessageReceived.chat;
 
     if (!chat.users) return console.log("chat.users not found");
-    console.log("Emitting message received:", newMessageReceived); // Log the message to ensure it is emitted correctly
     chat.users.forEach((user) => {
       if (user._id === newMessageReceived.sender._id) return;
-      console.log("message received", newMessageReceived);
       socket.in(chat._id).emit("message received", newMessageReceived);
     });
   });
