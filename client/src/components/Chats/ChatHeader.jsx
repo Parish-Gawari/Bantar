@@ -14,6 +14,7 @@ const ChatHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpenBell, setIsDropdownOpenBell] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const {
@@ -58,8 +59,10 @@ const ChatHeader = () => {
       {/* Notification and Profile Menu */}
       <div className="flex items-center gap-4 relative">
         {/* Notifications */}
-        <div className="relative">
-          <button className="relative">
+        {/* <div className="relative">
+          <button
+            className="relative"
+            onClick={() => setIsDropdownOpenBell(!isDropdownOpenBell)}>
             <BellIcon className="w-6 h-6 text-gray-600" />
             {notification.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -67,21 +70,27 @@ const ChatHeader = () => {
               </span>
             )}
           </button>
-          {notification.length > 0 && (
+          {isDropdownOpenBell && (
             <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-md rounded-lg z-50">
-              {notification.map((notif) => (
-                <div
-                  key={notif._id}
-                  onClick={() => accessChat(notif.chat)}
-                  className="p-2 hover:bg-gray-100 cursor-pointer">
-                  {notif.chat.isGroupChat
-                    ? `New Message in ${notif.chat.chatName}`
-                    : `New Message from ${notif.chat.users[0].name}`}
+              {notification.length > 0 ? (
+                notification.map((notif) => (
+                  <div
+                    key={notif._id}
+                    onClick={() => accessChat(notif.chat)}
+                    className="p-2 hover:bg-gray-100 cursor-pointer">
+                    {notif.chat.isGroupChat
+                      ? `New Message in ${notif.chat.chatName}`
+                      : `New Message from ${notif.chat.users[0].name}`}
+                  </div>
+                ))
+              ) : (
+                <div className="p-2 text-gray-500 text-center">
+                  No new messages
                 </div>
-              ))}
+              )}
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Profile Dropdown */}
         <div className="relative">
