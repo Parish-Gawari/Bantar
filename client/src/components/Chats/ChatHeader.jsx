@@ -25,7 +25,6 @@ const ChatHeader = () => {
     chats,
     setChats,
   } = useChatContext();
-
   const accessChat = async (chat) => {
     try {
       setLoadingChat(true);
@@ -59,7 +58,7 @@ const ChatHeader = () => {
       {/* Notification and Profile Menu */}
       <div className="flex items-center gap-4 relative">
         {/* Notifications */}
-        {/* <div className="relative">
+        <div className="relative">
           <button
             className="relative"
             onClick={() => setIsDropdownOpenBell(!isDropdownOpenBell)}>
@@ -75,12 +74,12 @@ const ChatHeader = () => {
               {notification.length > 0 ? (
                 notification.map((notif) => (
                   <div
-                    key={notif._id}
+                    key={notif?._id}
                     onClick={() => accessChat(notif.chat)}
                     className="p-2 hover:bg-gray-100 cursor-pointer">
                     {notif.chat.isGroupChat
-                      ? `New Message in ${notif.chat.chatName}`
-                      : `New Message from ${notif.chat.users[0].name}`}
+                      ? `New Message in ${notif?.chat?.chatName}`
+                      : `New Message from ${notif?.sender?.name}`}
                   </div>
                 ))
               ) : (
@@ -90,7 +89,7 @@ const ChatHeader = () => {
               )}
             </div>
           )}
-        </div> */}
+        </div>
 
         {/* Profile Dropdown */}
         <div className="relative">

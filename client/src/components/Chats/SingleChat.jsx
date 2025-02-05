@@ -16,12 +16,8 @@ import ScrollableChat from "../../misc/ScrollableFeed";
 const ENDPOINT = import.meta.env.VITE_BASE_URL || "http://localhost:5005";
 let socket, selectedChatCompare;
 
-const SingleChat = ({
-  fetchAgain,
-  setFetchAgain,
-  notification,
-  setNotification,
-}) => {
+const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+  const { notification, setNotification } = useChatContext();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -102,34 +98,25 @@ const SingleChat = ({
   }, [selectedChat]);
 
   useEffect(() => {
-    const messageListener = (newMessageRecieved) => {
-      setMessages((prevMessages) => {
-        const messageExists = prevMessages.some(
-          (msg) => msg._id === newMessageRecieved._id
+    socket.on("message received", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        // Check if newMessageRecieved already exists in notification array by comparing _id
+        const messageExists = notification.some(
+          (n) => n._id === newMessageRecieved._id
         );
-        if (messageExists) return prevMessages;
 
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageRecieved.chat._id
-        ) {
-          if (!notification.some((n) => n._id === newMessageRecieved._id)) {
-            setNotification((prev) => [newMessageRecieved, ...prev]);
-            setFetchAgain((prev) => !prev);
-          }
-        } else {
-          return [...prevMessages, newMessageRecieved];
+        if (!messageExists) {
+          console.log("Adding new message to notifications");
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
         }
-
-        return prevMessages;
-      });
-    };
-
-    socket.on("message received", messageListener);
-
-    return () => {
-      socket.off("message received", messageListener);
-    };
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
   });
 
   const typingHandler = (e) => {
